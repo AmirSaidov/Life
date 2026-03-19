@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowUpCircle, ArrowDownCircle, Trash2, Edit2 } from 'lucide-react'
+import { ArrowUpCircle, ArrowDownCircle, Trash2 } from 'lucide-react'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import ConfirmDialog from '@/components/UI/ConfirmDialog'
 import { useDeleteTransaction } from '@/hooks/useFinance'
 import { formatCurrency } from '@/utils/formatters'
 
-export default function TransactionItem({ transaction, currency = 'RUB' }) {
+export default function TransactionItem({ transaction, currency }) {
   const [confirmDelete, setConfirmDelete] = useState(false)
   const deleteTransaction = useDeleteTransaction()
   const isIncome = transaction.type === 'income'

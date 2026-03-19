@@ -1,6 +1,6 @@
 import { formatCurrency } from '@/utils/formatters'
 
-export default function BudgetBar({ category, spent = 0, currency = 'RUB' }) {
+export default function BudgetBar({ category, spent = 0, currency }) {
   const pct = category.limit > 0 ? Math.min((spent / category.limit) * 100, 100) : 0
   const isOver = pct >= 100
   const isWarn = pct >= 80

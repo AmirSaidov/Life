@@ -1,7 +1,9 @@
 import { useState } from 'react'
-import { User, Bell, Globe, LogOut, Save } from 'lucide-react'
+import { User, Globe, LogOut, Save } from 'lucide-react'
 import Card from '@/components/UI/Card'
 import Button from '@/components/UI/Button'
+import Dropdown from '@/components/UI/Dropdown'
+import ConfirmDialog from '@/components/UI/ConfirmDialog'
 import useAuthStore from '@/store/authStore'
 import { useToast } from '@/components/UI/Toast'
 import api from '@/lib/api'
@@ -24,6 +26,7 @@ export default function Settings() {
     currency: user?.currency || 'RUB'
   })
   const [saving, setSaving] = useState(false)
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }))
 
@@ -85,15 +88,7 @@ export default function Settings() {
         </div>
         <div>
           <label className="text-xs text-muted block mb-1.5">Валюта</label>
-          <select
-            className="input-field"
-            value={form.currency}
-            onChange={(e) => set('currency', e.target.value)}
-          >
-            {CURRENCIES.map((c) => (
-              <option key={c.value} value={c.value} style={{ background: '#141720' }}>{c.label}</option>
-            ))}
-          </select>
+          <Dropdown value={form.currency} onChange={(v) => set('currency', v)} options={CURRENCIES} />
         </div>
       </Card>
 
@@ -103,13 +98,22 @@ export default function Settings() {
 
       <Card>
         <button
-          onClick={handleLogout}
+          onClick={() => setShowLogoutConfirm(true)}
           className="flex items-center gap-3 text-danger hover:text-red-300 transition-colors text-sm w-full"
         >
           <LogOut size={16} />
           Выйти из аккаунта
         </button>
       </Card>
+
+      <ConfirmDialog
+        open={showLogoutConfirm}
+        onClose={() => setShowLogoutConfirm(false)}
+        onConfirm={handleLogout}
+        title="Выйти из аккаунта?"
+        message="Текущая сессия будет завершена."
+        confirmLabel="Выйти"
+      />
     </div>
   )
 }

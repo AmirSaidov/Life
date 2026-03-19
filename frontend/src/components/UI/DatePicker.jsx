@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { DayPicker } from 'react-day-picker'
 import { ru } from 'date-fns/locale'
 import { format } from 'date-fns'
@@ -21,7 +22,7 @@ export default function DatePicker({ value, onChange, placeholder = 'Выбра�
   const label = selected ? format(selected, 'd MMM yyyy', { locale: ru }) : placeholder
 
   return (
-    <div className={`relative ${className}`} ref={ref}>
+    <div className={`relative ${open ? 'z-[120]' : 'z-10'} ${className}`} ref={ref}>
       <button
         type="button"
         onClick={() => setOpen(!open)}
@@ -40,20 +41,28 @@ export default function DatePicker({ value, onChange, placeholder = 'Выбра�
           />
         )}
       </button>
-      {open && (
-        <div className="absolute top-full left-0 mt-2 z-50 glass-card p-2 shadow-2xl">
-          <DayPicker
-            mode="single"
-            selected={selected}
-            onSelect={(date) => {
-              onChange(date ? date.toISOString() : null)
-              setOpen(false)
-            }}
-            locale={ru}
-            showOutsideDays
-          />
-        </div>
-      )}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: -6, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -6, scale: 0.98 }}
+            transition={{ duration: 0.16 }}
+            className="absolute top-full left-0 mt-2 z-[130] glass-card p-2 shadow-2xl"
+          >
+            <DayPicker
+              mode="single"
+              selected={selected}
+              onSelect={(date) => {
+                onChange(date ? date.toISOString() : null)
+                setOpen(false)
+              }}
+              locale={ru}
+              showOutsideDays
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

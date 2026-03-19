@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, X } from 'lucide-react'
 import Button from '@/components/UI/Button'
 import DatePicker from '@/components/UI/DatePicker'
+import Dropdown from '@/components/UI/Dropdown'
 import { useCreateTask } from '@/hooks/useTasks'
 
 const PRIORITIES = [
@@ -76,28 +77,8 @@ export default function TaskForm() {
               onChange={(e) => set('description', e.target.value)}
             />
             <div className="grid grid-cols-2 gap-2">
-              <select
-                className="input-field text-sm"
-                value={form.priority}
-                onChange={(e) => set('priority', e.target.value)}
-              >
-                {PRIORITIES.map((p) => (
-                  <option key={p.value} value={p.value} style={{ background: '#141720' }}>
-                    {p.label}
-                  </option>
-                ))}
-              </select>
-              <select
-                className="input-field text-sm"
-                value={form.category}
-                onChange={(e) => set('category', e.target.value)}
-              >
-                {CATEGORIES.map((c) => (
-                  <option key={c.value} value={c.value} style={{ background: '#141720' }}>
-                    {c.label}
-                  </option>
-                ))}
-              </select>
+              <Dropdown value={form.priority} onChange={(v) => set('priority', v)} options={PRIORITIES} />
+              <Dropdown value={form.category} onChange={(v) => set('category', v)} options={CATEGORIES} />
             </div>
             <DatePicker
               value={form.dueDate}

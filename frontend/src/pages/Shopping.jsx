@@ -23,7 +23,7 @@ const CATEGORY_LABELS = {
 export default function Shopping() {
   const [tab, setTab] = useState('list')
   const { data: items = [], isPending: itemsPending, isError: itemsError, refetch } = useShoppingItems()
-  const { data: recipes = [], isPending: recipesPending } = useRecipes()
+  const { data: recipes = [], isPending: recipesPending, isError: recipesError, refetch: refetchRecipes } = useRecipes()
 
   const unchecked = items.filter((i) => !i.checked)
   const checked = items.filter((i) => i.checked)
@@ -103,6 +103,14 @@ export default function Shopping() {
         <div>
           {recipesPending ? (
             <Skeleton count={3} />
+          ) : recipesError ? (
+            <EmptyState
+              type="error"
+              title="Не удалось загрузить рецепты"
+              description="Проверьте API рецептов и повторите попытку"
+              action={refetchRecipes}
+              actionLabel="Повторить"
+            />
           ) : recipes.length === 0 ? (
             <EmptyState title="Рецептов нет" description="Рецепты можно будет добавить здесь" />
           ) : (

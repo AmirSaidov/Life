@@ -35,7 +35,7 @@ export default function Modal({ open, onClose, title, children, maxWidth = 'max-
         >
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
           <motion.div
-            className={`relative glass-card w-full ${maxWidth} z-10 max-h-[90vh] overflow-y-auto`}
+            className={`relative glass-card w-full ${maxWidth} z-10 max-h-[90vh] overflow-y-auto p-5 md:p-6`}
             initial={{ opacity: 0, y: 20, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.97 }}

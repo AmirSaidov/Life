@@ -3,6 +3,7 @@ import { X } from 'lucide-react'
 import Button from '@/components/UI/Button'
 import DatePicker from '@/components/UI/DatePicker'
 import Modal from '@/components/UI/Modal'
+import Dropdown from '@/components/UI/Dropdown'
 import { useCreateTransaction } from '@/hooks/useFinance'
 import { useBudgetCategories } from '@/hooks/useFinance'
 
@@ -108,16 +109,15 @@ export default function TransactionForm({ open, onClose }) {
         </div>
 
         {categories.length > 0 && (
-          <select
-            className="input-field"
+          <Dropdown
             value={form.budgetCategoryId}
-            onChange={(e) => set('budgetCategoryId', e.target.value)}
-          >
-            <option value="" style={{ background: '#141720' }}>Категория (необяз.)</option>
-            {categories.filter((c) => c.type === form.type).map((c) => (
-              <option key={c.id} value={c.id} style={{ background: '#141720' }}>{c.name}</option>
-            ))}
-          </select>
+            onChange={(v) => set('budgetCategoryId', v)}
+            placeholder="Категория (необяз.)"
+            options={[
+              { value: '', label: 'Категория (необяз.)' },
+              ...categories.filter((c) => c.type === form.type).map((c) => ({ value: c.id, label: c.name }))
+            ]}
+          />
         )}
 
         <textarea

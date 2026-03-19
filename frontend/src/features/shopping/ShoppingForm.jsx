@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, X } from 'lucide-react'
 import Button from '@/components/UI/Button'
+import Dropdown from '@/components/UI/Dropdown'
 import { useCreateShoppingItem } from '@/hooks/useShopping'
 
 const CATEGORIES = [
@@ -62,9 +63,7 @@ export default function ShoppingForm() {
               <input type="number" className="input-field text-sm" placeholder="Цена ₽" value={form.price} min="0" onChange={(e) => set('price', e.target.value)} />
             </div>
             <div className="grid grid-cols-2 gap-2">
-              <select className="input-field text-sm" value={form.category} onChange={(e) => set('category', e.target.value)}>
-                {CATEGORIES.map((c) => <option key={c.value} value={c.value} style={{ background: '#141720' }}>{c.label}</option>)}
-              </select>
+              <Dropdown value={form.category} onChange={(v) => set('category', v)} options={CATEGORIES} />
               <input className="input-field text-sm" placeholder="Магазин (необяз.)" value={form.store} onChange={(e) => set('store', e.target.value)} />
             </div>
             <div className="flex gap-2">

@@ -11,6 +11,7 @@ import TransactionForm from '@/features/finance/TransactionForm'
 import EmptyState from '@/components/UI/EmptyState'
 import Skeleton from '@/components/UI/Skeleton'
 import Button from '@/components/UI/Button'
+import Dropdown from '@/components/UI/Dropdown'
 import { useTransactions, useBudgetCategories } from '@/hooks/useFinance'
 import { formatCurrency } from '@/utils/formatters'
 import { colors } from '@/styles/tokens'
@@ -63,15 +64,13 @@ export default function Finance() {
         <div>
           <h1 className="text-xl font-bold font-display text-white">Финансы</h1>
           <div className="flex items-center gap-2 mt-1">
-            <select
-              className="text-sm text-muted bg-transparent border-none outline-none cursor-pointer"
+            <Dropdown
+              className="w-36"
+              buttonClassName="py-2"
               value={month}
-              onChange={(e) => setMonth(Number(e.target.value))}
-            >
-              {MONTHS.map((m, i) => (
-                <option key={i + 1} value={i + 1} style={{ background: '#141720' }}>{m}</option>
-              ))}
-            </select>
+              onChange={(v) => setMonth(Number(v))}
+              options={MONTHS.map((m, i) => ({ value: i + 1, label: m }))}
+            />
             <input
               type="number"
               value={year}

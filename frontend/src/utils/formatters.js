@@ -1,11 +1,13 @@
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { formatDistanceToNow, isToday, isTomorrow, isPast } from 'date-fns'
+import useAuthStore from '@/store/authStore'
 
-export function formatCurrency(amount, currency = 'RUB') {
+export function formatCurrency(amount, currency) {
+  const resolvedCurrency = currency || useAuthStore.getState().user?.currency || 'RUB'
   return new Intl.NumberFormat('ru-RU', {
     style: 'currency',
-    currency,
+    currency: resolvedCurrency,
     maximumFractionDigits: 0
   }).format(amount)
 }

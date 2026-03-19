@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ChefHat, Plus, Trash2, ShoppingBag } from 'lucide-react'
+import { ChefHat, Trash2, ShoppingBag } from 'lucide-react'
 import Button from '@/components/UI/Button'
 import ConfirmDialog from '@/components/UI/ConfirmDialog'
 import { useDeleteRecipe, useGenerateShoppingFromRecipe } from '@/hooks/useShopping'

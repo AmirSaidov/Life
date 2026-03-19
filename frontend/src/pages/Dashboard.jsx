@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { CheckSquare, Zap, Wallet, ShoppingCart, ArrowRight, CheckCheck, CalendarDays } from 'lucide-react'
+import { CheckSquare, Zap, Wallet, ShoppingCart, ArrowRight, CheckCheck } from 'lucide-react'
 import Card from '@/components/UI/Card'
 import { SkeletonCard } from '@/components/UI/Skeleton'
 import { useTasks } from '@/hooks/useTasks'
 import { useHabits } from '@/hooks/useHabits'
-import { useTransactions, useBudgetCategories } from '@/hooks/useFinance'
+import { useTransactions } from '@/hooks/useFinance'
 import { useShoppingItems } from '@/hooks/useShopping'
 import { formatCurrency, formatRelativeDate } from '@/utils/formatters'
 import { format } from 'date-fns'
@@ -38,14 +38,17 @@ function StatCard({ icon: Icon, label, value, sub, color, to }) {
 }
 
 export default function Dashboard() {
-  const { data: allTasks = [], isPending: tasksPending } = useTasks('today')
-  const { data: habits = [], isPending: habitsPending } = useHabits()
+  const { data: allTasks = [], isPending: tasksPending } = useTasks('all')
+  const { data: habits = [] } = useHabits()
   const { data: transactions = [], isPending: transPending } = useTransactions(YEAR, MONTH)
-  const { data: budgetCats = [] } = useBudgetCategories()
   const { data: shopping = [] } = useShoppingItems()
 
   const today = format(now, 'yyyy-MM-dd')
   const loggedToday = habits.filter((h) => h.logs?.some((l) => format(new Date(l.date), 'yyyy-MM-dd') === today))
+  const todayTasksAll = allTasks.filter(
+    (t) => t.dueDate && format(new Date(t.dueDate), 'yyyy-MM-dd') === today
+  )
+  const todayTasks = todayTasksAll.filter((t) => !t.done)
   const doneTasks = allTasks.filter((t) => t.done)
   const uncheckedShopping = shopping.filter((s) => !s.checked)
 
@@ -74,8 +77,8 @@ export default function Dashboard() {
             <StatCard
               icon={CheckSquare}
               label="Задач сегодня"
-              value={`${doneTasks.length}/${allTasks.length}`}
-              sub={allTasks.length > 0 ? `${Math.round((doneTasks.length / allTasks.length) * 100)}% выполнено` : null}
+              value={`${todayTasksAll.filter((t) => t.done).length}/${todayTasksAll.length}`}
+              sub={todayTasksAll.length > 0 ? `${Math.round((todayTasksAll.filter((t) => t.done).length / todayTasksAll.length) * 100)}% выполнено` : null}
               color="#00D4AA"
               to="/tasks"
             />
@@ -115,11 +118,11 @@ export default function Dashboard() {
           </div>
           {tasksPending ? (
             <div className="space-y-2">{Array.from({ length: 3 }).map((_, i) => <SkeletonCard key={i} />)}</div>
-          ) : allTasks.length === 0 ? (
+          ) : todayTasks.length === 0 ? (
             <p className="text-muted text-sm py-6 text-center">На сегодня задач нет</p>
           ) : (
             <ul className="space-y-2">
-              {allTasks.slice(0, 6).map((task) => (
+              {todayTasks.slice(0, 6).map((task) => (
                 <li key={task.id} className="flex items-center gap-3 py-2 border-b border-white/5 last:border-0">
                   <div className={`w-4 h-4 rounded-md border-2 flex items-center justify-center shrink-0 ${task.done ? 'bg-accent border-accent' : 'border-white/20'}`}>
                     {task.done && <CheckCheck size={10} className="text-surface" />}
@@ -152,6 +155,25 @@ export default function Dashboard() {
                   <span className={`text-sm font-medium shrink-0 ${t.type === 'income' ? 'text-accent' : 'text-white'}`}>
                     {formatCurrency(t.amount)}
                   </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Card>
+
+        <Card>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-semibold font-display text-white">Завершенные задачи</h2>
+            <Link to="/tasks" className="text-xs text-accent hover:underline">Открыть</Link>
+          </div>
+          {doneTasks.length === 0 ? (
+            <p className="text-muted text-sm py-6 text-center">Пока нет завершенных задач</p>
+          ) : (
+            <ul className="space-y-2">
+              {doneTasks.slice(0, 5).map((task) => (
+                <li key={task.id} className="flex items-center gap-2 text-sm text-muted border-b border-white/5 py-2 last:border-0">
+                  <CheckCheck size={13} className="text-accent shrink-0" />
+                  <span className="line-through truncate">{task.title}</span>
                 </li>
               ))}
             </ul>

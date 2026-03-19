@@ -3,7 +3,7 @@ const prisma = require('../config/db')
 exports.getTasks = async (req, res, next) => {
   try {
     const { filter } = req.query
-    let where = { userId: req.userId }
+    let where = { userId: req.userId, done: false }
 
     if (filter === 'today') {
       const today = new Date()
