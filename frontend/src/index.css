@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #0D0F14;
+    color: #E2E8F0;
+    font-family: 'DM Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #141720;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+@layer components {
+  .glass-card {
+    background: rgba(20, 23, 32, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+  }
+
+  .glass-card-hover {
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .glass-card-hover:hover {
+    border-color: rgba(0, 212, 170, 0.15);
+    box-shadow: 0 0 24px rgba(0, 212, 170, 0.05);
+  }
+
+  .neon-text {
+    color: #00D4AA;
+    text-shadow: 0 0 20px rgba(0, 212, 170, 0.4);
+  }
+
+  .input-field {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: #E2E8F0;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .input-field:focus {
+    border-color: rgba(0, 212, 170, 0.4);
+    box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.08);
+  }
+
+  .input-field::placeholder {
+    color: #8892A4;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.rdp {
+  --rdp-accent-color: #00D4AA !important;
+  --rdp-background-color: rgba(0, 212, 170, 0.1) !important;
+  --rdp-accent-color-dark: #00D4AA !important;
+  --rdp-background-color-dark: rgba(0, 212, 170, 0.1) !important;
+  color: #E2E8F0;
+  margin: 0;
+}
+
+.rdp-day_selected {
+  background-color: #00D4AA !important;
+  color: #0D0F14 !important;
+}
+
+.rdp-button:hover:not([disabled]):not(.rdp-day_selected) {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.rdp-head_cell,
+.rdp-caption_label {
+  color: #8892A4;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.rdp-nav_button {
+  color: #8892A4 !important;
+}
