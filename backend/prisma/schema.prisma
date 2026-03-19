@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String           @id @default(cuid())
+  email            String           @unique
+  name             String
+  avatar           String?
+  currency         String           @default("RUB")
+  timezone         String           @default("Europe/Moscow")
+  passwordHash     String
+  createdAt        DateTime         @default(now())
+  tasks            Task[]
+  habits           Habit[]
+  transactions     Transaction[]
+  budgetCategories BudgetCategory[]
+  shoppingItems    ShoppingItem[]
+  recipes          Recipe[]
+}
+
+model Task {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  category    String    @default("general")
+  priority    String    @default("medium")
+  dueDate     DateTime?
+  recurring   Json?
+  done        Boolean   @default(false)
+  completedAt DateTime?
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Habit {
+  id           String     @id @default(cuid())
+  name         String
+  description  String?
+  icon         String     @default("zap")
+  color        String     @default("#00D4AA")
+  targetDays   Int[]
+  reminderTime String?
+  streak       Int        @default(0)
+  maxStreak    Int        @default(0)
+  goal         Int        @default(30)
+  createdAt    DateTime   @default(now())
+  userId       String
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  logs         HabitLog[]
+}
+
+model HabitLog {
+  id      String   @id @default(cuid())
+  date    DateTime
+  habitId String
+  habit   Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
+
+  @@unique([habitId, date])
+}
+
+model BudgetCategory {
+  id           String        @id @default(cuid())
+  name         String
+  icon         String        @default("circle")
+  color        String        @default("#00D4AA")
+  limit        Float         @default(0)
+  period       String        @default("monthly")
+  type         String        @default("expense")
+  userId       String
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+}
+
+model Transaction {
+  id               String          @id @default(cuid())
+  title            String
+  amount           Float
+  type             String
+  date             DateTime
+  note             String?
+  recurring        Boolean         @default(false)
+  budgetCategoryId String?
+  budgetCategory   BudgetCategory? @relation(fields: [budgetCategoryId], references: [id])
+  userId           String
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt        DateTime        @default(now())
+}
+
+model ShoppingItem {
+  id       String   @id @default(cuid())
+  name     String
+  category String   @default("other")
+  qty      Float    @default(1)
+  unit     String   @default("шт")
+  price    Float?
+  checked  Boolean  @default(false)
+  note     String?
+  store    String?
+  recipeId String?
+  recipe   Recipe?  @relation(fields: [recipeId], references: [id])
+  addedAt  DateTime @default(now())
+  userId   String
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Recipe {
+  id            String         @id @default(cuid())
+  name          String
+  description   String?
+  servings      Int            @default(2)
+  ingredients   Json
+  createdAt     DateTime       @default(now())
+  userId        String
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shoppingItems ShoppingItem[]
+}
